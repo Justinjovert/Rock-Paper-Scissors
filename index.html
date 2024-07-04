@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <title>Frontend Mentor | Rock, Paper, Scissors</title>
+
+    <!-- Score
+    Rules
+
+    You Picked
+    The House Picked
+
+    You Win
+    You Lose
+
+    Play Again -->
+</head>
+
+<body>
+
+    <main class="main-container">
+        <section class="scoreboard-container">
+            <div class="board">
+                <div class="play-pick">ROCK</div>
+                <div class="play-pick">PAPER</div>
+                <div class="play-pick">SCISSORS</div>
+            </div>
+            <div class="score-container">
+                <h4>SCORE</h4>
+                <span>12</span>
+            </div>
+        </section>
+        <section class="game-container">
+            <div class='outer-circle paper'>
+                <div class="inner-circle">
+                    <img src="images/icon-paper.svg">
+                </div>
+            </div>
+
+            <div class='outer-circle scissors'>
+                <div class="inner-circle">
+                    <img src="images/icon-scissors.svg">
+                </div>
+            </div>
+
+            <div class='outer-circle rock'>
+                <div class="inner-circle">
+                    <img src="images/icon-rock.svg">
+                </div>
+            </div>
+        </section>
+        <section class="gameplay">
+            <div class="pick-container">
+                <div class="circle-container">
+                    <div class='outer-circle paper-pick'>
+                        <div class="inner-circle">
+                            <img src="images/icon-paper.svg">
+                        </div>
+                    </div>
+                </div>
+                <span class="pick-span">YOU PICKED</span>
+            </div>
+            <div class="pick-container">
+                <div class="circle-container">
+                    <!-- <div class='outer-circle rock-pick'>
+                        <div class="inner-circle">
+                            <img src="images/icon-rock.svg">
+                        </div>
+                    </div> -->
+                    <div class="empty-circle outer-circle">
+
+                    </div>
+                </div>
+                <span class="pick-span">THE HOUSE PICKED</span>
+            </div>
+        </section>
+        <div class="result-container">
+            <span class="result-span">YOU WIN</span>
+            <button>PLAY AGAIN</button>
+        </div>
+        <div class="rules-container">
+            <div class="header">
+                <h2>RULES</h2>
+                <button><img src="./images/icon-close.svg"></button>
+            </div>
+            <img src="./images/image-rules.svg">
+        </div>
+        <button class="rules">RULES</button>
+    </main>
+
+
+    <div class="attribution">
+        Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
+        Coded by <a href="#">Your Name Here</a>.
+    </div>
+</body>
+
+</html>
