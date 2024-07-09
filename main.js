@@ -1,13 +1,8 @@
 
-let score = 0
-let mode
-let userOption = 1
-mode = userOption
 
+// Default
 let templateMode = `#pick-template`
-
-/* const game = ['rock', 'scissors', 'paper'] */
-const game = ['scissors', 'paper', 'rock', 'lizard', 'spock']
+let game = ['rock', 'scissors', 'paper']
 
 
 // Main contianer
@@ -16,23 +11,32 @@ const template = document.querySelector('[data-templates]')
 const rulesContainer = document.querySelector('.rules-popup')
 const changeModeContainer = document.querySelector('.change-mode-popup')
 const SCOREspan = document.querySelector('#SCORE')
+const overlay = document.getElementById('overlay')
+const changeModeButton = document.querySelector('.change-mode')
+const changeModeModal = document.querySelector('.change-mode-popup')
 let gameContainer
 
+// Changes mode
+// 3-way or 5-way
 const changeMode = () => {
     const selectedMode = changeModeContainer.querySelector('input[name="modeType"]:checked')
     // Change rules image
-    const rulesIMG = rulesContainer.querySelector('IMG')
+    const rulesIMG = rulesContainer.querySelector('#rulesIMG')
     if (selectedMode.value === 'normal') {
+        game = ['rock', 'scissors', 'paper']
         templateMode = `#pick-template`
-        rulesIMG.innerHTML = ''
+        rulesIMG.src = ''
         rulesIMG.src = "./images/image-rules.svg"
     }
     else if (selectedMode.value === 'bonus') {
+        game = ['scissors', 'paper', 'rock', 'lizard', 'spock']
         templateMode = `#bonus-template`
-        rulesIMG.innerHTML = ''
+        rulesIMG.src = ''
         rulesIMG.src = "./images/image-rules-bonus.svg"
     }
 
+    changeModeModal.style.display = 'none'
+    overlay.style.display = 'none'
     generateGame()
 }
 
@@ -267,17 +271,25 @@ mainContainer.addEventListener("click", ({ target }) => {
 })
 
 
+// Overlay
+overlay.addEventListener('click', () => {
+    overlay.style.display = 'none'
+    rulesContainer.style.display = 'none'
+    changeModeModal.style.display = 'none'
+})
+
 
 // RULES MODAL
 const rulesButton = document.querySelector('.rules')
 rulesButton.addEventListener('click', () => {
+    overlay.style.display = 'block'
     rulesContainer.style.display = 'flex'
 })
 
 // Change mode modal
-const changeModeButton = document.querySelector('.change-mode')
-const changeModeModal = document.querySelector('.change-mode-popup')
 changeModeButton.addEventListener('click', () => {
+    changeModeModal.querySelector('input[name="modeType"][value="normal"]').checked = true;
+    overlay.style.display = 'block'
     changeModeModal.style.display = 'flex'
 })
 
@@ -285,6 +297,7 @@ const closeButton = document.querySelectorAll('#close-button')
 Array.from(closeButton).forEach(button => {
     button.addEventListener('click', () => {
         const popupContainer = button.closest('[data-close]')
+        overlay.style.display = 'none'
         popupContainer.style.display = 'none'
     })
 })
