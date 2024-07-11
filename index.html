@@ -25,16 +25,34 @@
     <main class="main-container">
         <section class="scoreboard-container">
             <div class="board">
-                <div class="play-pick">ROCK</div>
-                <div class="play-pick">PAPER</div>
-                <div class="play-pick">SCISSORS</div>
+                <div>ROCK</div>
+                <div>PAPER</div>
+                <div>SCISSORS</div>
             </div>
             <div class="score-container">
                 <h4>SCORE</h4>
                 <span id='SCORE'>0</span>
             </div>
         </section>
+        <section class="gameplay">
+            <div id="userpick" class="pick-container">
+                <div class="circle-container">
+                </div>
+                <span class="pick-span">YOU PICKED</span>
+            </div>
+            <div class="result-container">
+                <span class="result-span"></span>
+                <button id="playAgain">PLAY AGAIN</button>
+            </div>
+            <div id="computerpick" class="pick-container">
+                <div class="circle-container" id="housePick">
+                    <div class="empty-circle outer-circle">
 
+                    </div>
+                </div>
+                <span class="pick-span">THE HOUSE PICKED</span>
+            </div>
+        </section>
 
         <div class="change-mode-popup" data-close>
             <div class="header-container">
@@ -61,6 +79,12 @@
 
 
     <template data-templates>
+        <div class="pulse">
+            <span style="--i:0;"></span>
+            <span style="--i:1;"></span>
+            <span style="--i:2;"></span>
+            <span style="--i:3;"></span>
+        </div>
         <section id="pick-template" class="game-container">
             <div data-pick="paper" class='outer-circle paper'>
                 <div class="inner-circle">
@@ -107,12 +131,16 @@
             </div>
         </section>
         <section class="gameplay">
-            <div class="pick-container">
+            <div id="userpick" class="pick-container">
                 <div class="circle-container">
                 </div>
                 <span class="pick-span">YOU PICKED</span>
             </div>
-            <div class="pick-container">
+            <div class="result-container">
+                <span class="result-span"></span>
+                <button onClick="generateGame()" id="playAgain">PLAY AGAIN</button>
+            </div>
+            <div id="computerpick" class="pick-container">
                 <div class="circle-container" id="housePick">
                     <div class="empty-circle outer-circle">
 
@@ -123,7 +151,7 @@
         </section>
         <div id="resultContainer" class="result-container">
             <span class="result-span"></span>
-            <button id="playAgain">PLAY AGAIN</button>
+            <button onClick="generateGame()" id="playAgain">PLAY AGAIN</button>
         </div>
     </template>
 

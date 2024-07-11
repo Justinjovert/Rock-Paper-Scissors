@@ -14,6 +14,7 @@ const SCOREspan = document.querySelector('#SCORE')
 const overlay = document.getElementById('overlay')
 const changeModeButton = document.querySelector('.change-mode')
 const changeModeModal = document.querySelector('.change-mode-popup')
+const board = mainContainer.querySelector('.board')
 let gameContainer
 
 // Changes mode
@@ -27,13 +28,27 @@ const changeMode = () => {
         templateMode = `#pick-template`
         rulesIMG.src = ''
         rulesIMG.src = "./images/image-rules.svg"
+        board.innerHTML = ''
+        board.style.fontSize = '2.5rem'
+        board.insertAdjacentHTML('afterbegin', '<div>ROCK</div><div>PAPER</div><div>SCISSORS</div>')
+
     }
     else if (selectedMode.value === 'bonus') {
         game = ['scissors', 'paper', 'rock', 'lizard', 'spock']
         templateMode = `#bonus-template`
         rulesIMG.src = ''
         rulesIMG.src = "./images/image-rules-bonus.svg"
+        board.innerHTML = ''
+        board.style.fontSize = '1.5rem'
+        board.insertAdjacentHTML('afterbegin', '<div>ROCK</div><div>PAPER</div><div>SCISSORS</div><div>LIZARD</div><div>SPOCK</div>')
     }
+
+    // Change scoreboard
+    
+    if(selectedMode.value === 'normal')
+
+    // Reset Score
+    SCOREspan.textContent = 0
 
     changeModeModal.style.display = 'none'
     overlay.style.display = 'none'
@@ -60,8 +75,6 @@ const generateGame = () => {
     }
 
     gameContainer = template.content.querySelector(templateMode).cloneNode(true)
-    // Bonus
-    //gameContainer = template.content.querySelector('#bonus-template').cloneNode(true)
     mainContainer.insertBefore(gameContainer, rulesContainer)
 }
 
@@ -72,12 +85,6 @@ generateGame()
 // Function that removes and adds specific class
 let classMode
 const changeClassList = (element) => {
-    /* if(userOption === 0){
-        classMode = 'pick'
-    }
-    else if(userOption === 1){
-        classMode = 'bonus'
-    } */
     const array = ['paper', 'rock', 'scissors', 'lizard', 'spock']
     Array.from(element.classList).forEach(elementClass => {
         for (let index = 0; index < array.length; index++) {
@@ -86,11 +93,6 @@ const changeClassList = (element) => {
                 element.classList.add(`${array[index]}-pick`)
             }
         }
-        /* if (elementClass.includes('paper') || elementClass == 'rock' || elementClass == 'scissors') {
-            console.log(elementClass)
-            element.classList.remove(elementClass)
-            element.classList.add(`${elementClass}-pick`)
-        } */
     })
 }
 
@@ -106,9 +108,7 @@ const moveElementOutside = (element) => {
     // Remove element from container
     element.parentElement.removeChild(element)
 
-    //rmeove class, add class
-    /* element.classList.remove('paper')
-    element.classList.add('paper-pick') */
+    // Remove specific class, add specific class
     changeClassList(element)
 
     // Append to main container
@@ -128,8 +128,10 @@ const moveElementOutside = (element) => {
 
 
 // Function that gets the bounding client rect
-const getRect = (userPickElement, templateElement) => {
-    const rect = templateElement.getBoundingClientRect()
+const getRect = (userPickElement, templateElement, computerPickContainer) => {
+    const UPrect = userPickElement.getBoundingClientRect()
+    const TErect = templateElement.getBoundingClientRect()
+    const CPrect = computerPickContainer.getBoundingClientRect()
 
     const TEwidth = templateElement.offsetWidth;
     const TEheight = templateElement.offsetHeight;
@@ -139,17 +141,16 @@ const getRect = (userPickElement, templateElement) => {
     userPickElement.style.height = `${TEheight}px`
 
     // Set X and Y
-    userPickElement.style.top = `${rect.top + window.scrollY}px`
-    userPickElement.style.left = `${rect.left + window.scrollX}px`;
+    userPickElement.style.top = `${TErect.top + window.scrollY}px`
+    userPickElement.style.left = `${TErect.left + window.scrollX}px`;
 
-    return userPickElement
+    // Return both rects
+    return { UPrect, CPrect }
 }
 
 
 // Generate a pick from house
 const generateHousePick = () => {
-
-    let container = `.game-container`
 
     const pickTemplate = template.content.querySelector(templateMode).cloneNode(true)
 
@@ -167,18 +168,11 @@ const generateHousePick = () => {
 
 
 const gameSuccess = (textContent) => {
-    const resultContainer = template.content.querySelector('#resultContainer').cloneNode(true)
-    mainContainer.insertBefore(resultContainer, rulesContainer)
-    //Add button OnClick
-    const button = resultContainer.querySelector('#playAgain')
-    button.onclick = generateGame
+    const resultContainer = mainContainer.querySelector('.result-container')
+    resultContainer.style.opacity = '1'
     // Change text content
     const span = resultContainer.querySelector('.result-span')
     span.textContent = textContent
-    resultContainer.style.display = 'flex'
-    setTimeout(() => {
-        resultContainer.classList.add('opacity-to-full')
-    }, 10);
 }
 
 
@@ -207,6 +201,7 @@ const winnerWINNERCD = (userChoice, gameChoice) => {
 // Using event delegation on main container
 mainContainer.addEventListener("click", ({ target }) => {
     if (target.closest('.outer-circle')) {
+
         const userPick = target.closest('.outer-circle')
         // Clone the picked item
         const clone = userPick.cloneNode(true)
@@ -223,6 +218,11 @@ mainContainer.addEventListener("click", ({ target }) => {
         })
 
 
+        // Transition starts, disable event delegation
+        gameContainer.addEventListener('transitionstart', () => {
+            mainContainer.style.pointerEvents = 'none'
+        })
+
         // After transition
         // Set display to none
         gameContainer.addEventListener('transitionend', () => {
@@ -234,13 +234,16 @@ mainContainer.addEventListener("click", ({ target }) => {
             const gameplay = template.content.querySelector('.gameplay').cloneNode(true)
             mainContainer.insertBefore(gameplay, rulesContainer)
             gameplay.style.display = 'flex'
+            moveElements() // Initial call
             setTimeout(() => {
                 gameplay.classList.add('opacity-to-full')
             }, 10);
 
             // Move picked element to gameplay container template (X, Y)
             const circleContainer = gameplay.querySelector('.circle-container')
-            const element = getRect(userPickElement, circleContainer)
+            const computerPickContainer = gameplay.querySelector('#computerpick')
+            getRect(userPickElement, circleContainer, computerPickContainer)
+
 
             // After transition
             // Set display to none to UserPickElement
@@ -260,6 +263,20 @@ mainContainer.addEventListener("click", ({ target }) => {
 
                 // Display game status
                 setTimeout(() => {
+                    // Default back to clickable pointer events
+                    mainContainer.style.pointerEvents = 'auto'
+                    // Display a pulse on win ide
+                    const pulseTemplate = template.content.querySelector('.pulse').cloneNode(true)
+                    if (textContent.includes('WIN')) {
+                        // Take pulse template
+                        // Put pulse template on user container rect
+                        const winnerElement = document.querySelector('#userpick').querySelector('.circle-container')
+                        winnerElement.appendChild(pulseTemplate)
+                    }
+                    else if (textContent.includes('LOSE')) {
+                        const winnerElement = document.querySelector('#computerpick').querySelector('.circle-container')
+                        winnerElement.appendChild(pulseTemplate)
+                    }
                     gameSuccess(textContent)
                 }, 300);
             }, { once: true })
@@ -301,3 +318,41 @@ Array.from(closeButton).forEach(button => {
         popupContainer.style.display = 'none'
     })
 })
+
+
+// Dynamically move DOM to container
+// MQ limitations
+const moveElements = () => {
+    // 500 value same for media query
+    const gameplay = mainContainer.querySelector('.gameplay')
+    const results = mainContainer.querySelector('.result-container')
+    // For mobile
+    if (window.innerWidth <= 650) {
+        if (gameplay && gameplay.contains(results)) {
+            mainContainer.insertBefore(results, rulesContainer)
+        }
+    }
+    else if (window.innerWidth > 650) {
+        if (mainContainer.contains(results) && gameplay) {
+            const computerPick = gameplay.querySelector('#computerpick')
+            gameplay.insertBefore(results, computerPick)
+        }
+    }
+}
+
+/* Adjust elements based on screen width using debounce technique */
+// Debounce function
+function debounce(func, wait) {
+    let timeout;
+    return function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, arguments), wait);
+    };
+}
+
+// Debounced version of the function
+const debounceElements = debounce(moveElements, 200);
+
+
+// Listen for window resize events
+window.addEventListener('resize', debounceElements);
