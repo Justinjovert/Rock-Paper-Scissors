@@ -63,10 +63,8 @@ const changeMode = () => {
     }
 
 
-    if (selectedMode.value === 'normal')
-
-        // Reset Score
-        SCOREspan.textContent = 0
+    // Reset Score
+    SCOREspan.textContent = 0
 
     changeModeModal.style.display = 'none'
     overlay.style.display = 'none'
