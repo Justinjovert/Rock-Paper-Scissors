@@ -17,6 +17,25 @@ const changeModeModal = document.querySelector('.change-mode-popup')
 const board = mainContainer.querySelector('.board')
 let gameContainer
 
+
+// Sets a variable in localStorage for score
+const setVarLS = (score) => {
+    localStorage.setItem('myScore', score)
+}
+
+const getVarLS = () => {
+    const scoreValue = localStorage.getItem('myScore')
+
+    if (scoreValue !== null) {
+        return scoreValue
+    }
+    else {
+        return 0
+    }
+}
+
+SCOREspan.innerHTML = getVarLS()
+
 // Changes mode
 // 3-way or 5-way
 const changeMode = () => {
@@ -43,12 +62,11 @@ const changeMode = () => {
         board.insertAdjacentHTML('afterbegin', '<div>ROCK</div><div>PAPER</div><div>SCISSORS</div><div>LIZARD</div><div>SPOCK</div>')
     }
 
-    // Change scoreboard
-    
-    if(selectedMode.value === 'normal')
 
-    // Reset Score
-    SCOREspan.textContent = 0
+    if (selectedMode.value === 'normal')
+
+        // Reset Score
+        SCOREspan.textContent = 0
 
     changeModeModal.style.display = 'none'
     overlay.style.display = 'none'
@@ -182,16 +200,20 @@ const winnerWINNERCD = (userChoice, gameChoice) => {
         return 'DRAW'
     } else if (index + 1 === game.length && game[0] === gameChoice) { // Special condition for if choice exceeded array length
         SCOREspan.innerHTML = parseInt(SCOREspan.textContent) + 1
+        setVarLS(parseInt(SCOREspan.textContent))
         return 'YOU WIN'
     } else if (game[(index - 2 + game.length) % game.length] === gameChoice) { // Special condition if index is lower than 0
         SCOREspan.innerHTML = parseInt(SCOREspan.textContent) + 1
+        setVarLS(parseInt(SCOREspan.textContent))
         return 'YOU WIN'
     } else if (game[index + 1] === gameChoice || game[index - 2] === gameChoice) { // If +1 or -2 choice. Refer to array
         SCOREspan.innerHTML = parseInt(SCOREspan.textContent) + 1
+        setVarLS(parseInt(SCOREspan.textContent))
         return 'YOU WIN'
     }
     else {
         SCOREspan.innerHTML = 0
+        setVarLS(0)
         return 'YOU LOSE'
     }
 
